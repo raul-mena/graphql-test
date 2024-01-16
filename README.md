@@ -52,5 +52,9 @@ yarn lint
 ```
 
 ```bash
+yarn test
+```
+
+```bash
 yarn compile
 ```

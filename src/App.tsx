@@ -10,7 +10,7 @@ import { Post } from "./__generated__/graphql";
 
 import { gql } from "@apollo/client";
 
-const GET_POSTS = gql`
+export const GET_POSTS = gql`
   query Posts {
     posts {
       data {
@@ -38,7 +38,7 @@ type Post = {
   body: string;
 };
 
-const PostItem = (post: Post) => (
+export const PostItem = (post: Post) => (
   <div className="bg-white rounded-md px-2 py-1 mt-4">
     <h2>{post.title}</h2>
     <p className="text-dark-body text-sm m-0">{post.body}</p>
@@ -52,7 +52,7 @@ const NewPostItem = (post: Post) => (
   </div>
 );
 
-const Main = () => {
+export const Main = () => {
   const { loading, error, data } = useQuery(GET_POSTS);
 
   if (loading) return <p>Loading...</p>;
