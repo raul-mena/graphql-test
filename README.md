@@ -33,7 +33,7 @@ _NOTE_: In case you run out of time or your solution becomes too ambitious, just
 
 # Development
 
-We are using:
+## Technical stack
 
 - Server: [Vite](https://vitejs.dev/)
 - GraphQL Client: [Apollo Client](https://www.apollographql.com/docs/react/)
@@ -58,3 +58,18 @@ yarn test
 ```bash
 yarn compile
 ```
+
+## How to run the project
+
+This repository is configured with `devcontainer.json`, this makes it easier to run it in an isolated environment, directly from GitHub or directly on your machine.
+It is up to you how you want to run it.
+
+### GitHub Codespaces
+
+All GitHub personal accounts come with up to 120 minutes for free. [More info](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces#monthly-included-storage-and-core-hours-for-personal-accounts).
+
+Feel free to just [Start a Codespace](https://docs.github.com/en/codespaces/getting-started/quickstart) directly from Github, so no need to install anything.
+
+### DevPod
+
+[DevPod](https://devpod.sh/), select the repo and [start your workspace](https://devpod.sh/docs/getting-started/quickstart-vscode)
