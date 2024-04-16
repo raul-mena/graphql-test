@@ -5,14 +5,14 @@ import {
   InMemoryCache,
   useQuery,
 } from "@apollo/client";
-
-import { Post } from "./__generated__/graphql";
-
 import { gql } from "@apollo/client";
+import { useEffect, useState } from "react";
+import CreatePostForm from "./components/CreatePostForm";
+import { PostItemInterface } from "./interfaces/Post";
 
 export const GET_POSTS = gql`
   query Posts {
-    posts {
+    posts(options: { paginate: {limit: 10}, sort: {field: "id"}}) {
       data {
         id
         title
@@ -32,28 +32,28 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-type Post = {
-  id: number;
-  title: string;
-  body: string;
-};
-
-export const PostItem = (post: Post) => (
+export const PostItem = (post: PostItemInterface) => (
   <div className="bg-white rounded-md px-2 py-1 mt-4">
-    <h2>{post.title}</h2>
-    <p className="text-dark-body text-sm m-0">{post.body}</p>
-  </div>
-);
-
-const NewPostItem = (post: Post) => (
-  <div key={post.id} className="bg-secondary rounded-md px-2 py-1 mt-4">
-    <h2>{post.title}</h2>
-    <p className="text-dark-body text-sm m-0">{post.body}</p>
+    <h2>{post?.title}</h2>
+    <p className="text-dark-body text-sm m-0">{post?.body}</p>
   </div>
 );
 
 export const Main = () => {
   const { loading, error, data } = useQuery(GET_POSTS);
+  const [showCreateItem, setShowCreateItem] = useState<boolean>(false)
+  const [newPostList, setNewPostList] = useState<PostItemInterface[]>([]);
+
+  const onSavePost = (item: PostItemInterface) => {
+    setNewPostList([item, ...newPostList]);
+    setShowCreateItem(false)
+  }
+
+  useEffect(() => {
+    if (data?.posts?.data && data.posts.data.length) {
+      setNewPostList(data.posts.data)
+    }
+  }, [data])
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
@@ -64,10 +64,12 @@ export const Main = () => {
         <h2 className="text-dark-body text-lg">Posts</h2>
       </header>
       <main className="flex-grow overflow-auto flex-col-reverse bg-body">
+
         <div className="px-4 py-4">
-          {data.posts.data.map((post: PostProps) => (
-            <PostItem {...post} />
+          {newPostList.map((post: PostItemInterface) => (
+            <PostItem key={post.id} {...post} />
           ))}
+
         </div>
       </main>
       <footer className="h-40 bg-header">
@@ -76,12 +78,15 @@ export const Main = () => {
             <button
               className="bg-white text-dark-body text-sm px-4 py-2 border-light-body border-2 border-solid rounded-xl"
               onClick={() => {
-                console.log("Create");
+                setShowCreateItem(true);
               }}
             >
               Create a new post
             </button>
           </div>
+          {
+            showCreateItem ? <CreatePostForm onSavePost={onSavePost} /> : <></>
+          }
           <div>
             <button
               className="bg-white text-dark-body text-sm px-4 py-2 border-light-body border-2 border-solid rounded-xl"
@@ -96,7 +101,7 @@ export const Main = () => {
             <button
               className="bg-white text-dark-body text-sm px-4 py-2 border-light-body border-2 border-solid rounded-xl"
               onClick={() => {
-                console.log("Delete");
+                setNewPostList(newPostList.slice(1));
               }}
             >
               Delete post
