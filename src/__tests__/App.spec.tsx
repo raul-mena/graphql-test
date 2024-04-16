@@ -28,4 +28,36 @@ test("loads and displays header", async () => {
   );
 
   expect(await screen.findByText("Posts")).toBeInTheDocument();
+  expect(await screen.findByText("Create a new post")).toBeInTheDocument();
+  expect(await screen.findByText("Delete post")).toBeInTheDocument();
+  expect(await screen.findByText("Update post")).toBeInTheDocument();
+});
+
+test("loads and displays post", async () => {
+  const mocks: any = [
+    {
+      request: {
+        query: GET_POSTS,
+      },
+      result: {
+        data: {
+          posts: {
+            data: [{
+              title: 'abcd',
+              body: 'qwerty',
+              id: 'a123'
+            }],
+          },
+        },
+      },
+    },
+  ];
+
+  render(
+    <MockedProvider mocks={mocks} addTypename={true}>
+      <Main />
+    </MockedProvider>
+  );
+
+  expect(await screen.findByText("abcd")).toBeInTheDocument();
 });
